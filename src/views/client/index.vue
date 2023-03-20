@@ -34,7 +34,7 @@
         :pagination="pagination"
       >
         <template slot="url" slot-scope="r">
-          <img :src="origin+r.logo" alt="" class="table-img" />
+          <img :src="r.url" alt="" class="table-img" />
         </template>
         <template slot="action" slot-scope="r">
           <a @click="handleEditorClick(r)">修改</a>
@@ -86,7 +86,6 @@ export default {
       },
       pageNum: 1,
       pageSize: 10,
-      origin: process.env.VUE_APP_API_ORIGIN
     }
   },
   methods: {

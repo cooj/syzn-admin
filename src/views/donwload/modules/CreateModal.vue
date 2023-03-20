@@ -90,12 +90,13 @@ export default {
       wrapperCol: {span: 21},
       form: {
         series: undefined,
-        title: undefined,
+        name: undefined,
         url: undefined,
-        model: undefined
+        // model: undefined,
+        sort:0,
       },
       rules: {
-        title: [{required: true, message: '文件名不能为空', trigger: 'blur'}],
+        name: [{required: true, message: '文件名不能为空', trigger: 'blur'}],
         type: [{required: true, message: '所属类型不能为空', trigger: 'change'}],
         series: [{required: true, message: '所属系列不能为空', trigger: 'change'}],
       },

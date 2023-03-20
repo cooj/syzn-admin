@@ -21,10 +21,10 @@
       :key="visible"
     >
       <a-form-model-item label="产品名称" prop="title" v-if="tabkey=='1'">
-        <a-input v-model="form.title" placeholder="产品名称" />
+        <a-input v-model="form.title" placeholder="产品名称" :maxlength="50" />
       </a-form-model-item>
       <a-form-model-item label="英文产品名称" prop="title_en" v-else>
-        <a-input v-model="form.title_en" placeholder="英文产品名称" />
+        <a-input v-model="form.title_en" placeholder="英文产品名称" :maxlength="50" />
       </a-form-model-item>
       <a-form-model-item label="产品描述" prop="description" v-if="tabkey=='1'">
         <a-textarea v-model="form.description" placeholder="产品描述" :auto-size="{ minRows: 3, maxRows: 5 }" />

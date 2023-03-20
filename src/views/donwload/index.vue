@@ -73,11 +73,11 @@ export default {
       queryParam: {},
       columns: [
         {title: '序号',customRender: (t,r,i) => `${i+1}`,width: 70,align: 'center'},
-        {title: '所属系列',dataIndex: 'series',key: 'series',ellipsis: true},
-        {title: '文件名',dataIndex: 'title',key: 'title',align:'center'},
-        {title: '所属系列',dataIndex: 'series',key: 'series',align:'center'},
-        {title: '所属型号',scopedSlots: {customRender: 'model'},align:'center'},
-        {title: '下载地址',dataIndex: 'url',key:'url',align:'center'},
+        // {title: '所属系列',dataIndex: 'series',key: 'series',ellipsis: true},
+        {title: '文件名',dataIndex: 'name',key: 'name',width:220},
+        // {title: '所属系列',dataIndex: 'series',key: 'series',align:'center'},
+        // {title: '所属型号',scopedSlots: {customRender: 'model'},align:'center'},
+        {title: '下载地址',dataIndex: 'url',key:'url'},
         {title: '操作',scopedSlots: {customRender: 'action'},width: 120,align: 'center'}
       ],
       data: [],
@@ -125,7 +125,7 @@ export default {
       this.$refs.CreateModal.fileList = [{
         uid: r.id,
         name: getFileName(r.url),
-        url: process.env.VUE_APP_API_ORIGIN+r.url
+        url: r.url
       }]
     },
     // 删除

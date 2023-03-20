@@ -2,8 +2,11 @@ import { post } from '@/utils/http'
 import request from '@/utils/request'
 
 const api = {
-  getCompanyDetail: '/manage/companyProfile/get', // 获取公司介绍详情
-  updateCompanyInfo: '/manage/companyProfile/update', // 修改公司介绍
+  // getCompanyDetail: '/manage/companyProfile/get', // 获取公司介绍详情
+  // updateCompanyInfo: '/manage/companyProfile/update', // 修改公司介绍
+
+  getCompanyDetail: '/api/v1/company/info', // 获取公司介绍详情
+  updateCompanyInfo: '/api/v1/company/update', // 修改公司介绍
 
   // addClient: '/manage/cooperativeCustomers/insert', // 添加合作客户
   // deleteClient: '/manage/cooperativeCustomers/delete', //删除合作客户
@@ -89,10 +92,15 @@ const api = {
   addHomePageInfo: '/manage/homeImage/insert', // 新增首页
   deleteHomPageInfo: '/manage/homeImage/delete', // 删除第一屏的轮播图
 
-  getVideoList: '/manage/video/list', //获取视频列表
-  addVideoItem: '/manage/video/insert', // 新增视频
-  updateVideoItem: '/manage/video/update', //修改视频
-  deleteVideoItem: '/manage/video/delete', // 删除视频
+  // getVideoList: '/manage/video/list', //获取视频列表
+  // addVideoItem: '/manage/video/insert', // 新增视频
+  // updateVideoItem: '/manage/video/update', //修改视频
+  // deleteVideoItem: '/manage/video/delete', // 删除视频
+
+  getVideoList: '/api/v1/video/list', //获取视频列表
+  addVideoItem: '/api/v1/video/insert', // 新增视频
+  updateVideoItem: '/api/v1/video/update', //修改视频
+  deleteVideoItem: '/api/v1/video/delete', // 删除视频
 }
 
 export default api

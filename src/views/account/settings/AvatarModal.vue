@@ -127,10 +127,10 @@ export default {
           const _files = new window.File([data], _this.fileName, {type: data.type})
           formData.append('file', _files)
           uploadFile(formData).then((res) => {
-            if (res.code == '0') {
+            if (res.code == 200) {
               _this.$message.success('上传成功')
               this.visible = false
-              _this.$emit('ok', res.data,this.id)
+              _this.$emit('ok', res.data.file,this.id)
             }
           })
           // this.$http.post('https://www.mocky.io/v2/5cc8019d300000980a055e76', formData, { contentType: false, processData: false, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })

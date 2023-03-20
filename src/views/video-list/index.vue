@@ -5,6 +5,11 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="6" :sm="24">
+              <a-form-item label="名称">
+                <a-input v-model="queryParam.title" placeholder="名称"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
               <a-form-item label="视频所属">
                 <a-select
                   allowClear
@@ -38,12 +43,15 @@
         :loading="loading"
         :pagination="pagination"
       >
-        <template slot="homeRecommend" slot-scope="t,r">
-          <a-tag color="green" v-if="r.homeRecommend">是</a-tag>
+        <template slot="video_image_url" slot-scope="t,r">
+          <img :src="r.video_image_url" alt="" class="table-img" />
+        </template>
+        <template slot="home_recommend" slot-scope="t,r">
+          <a-tag color="green" v-if="r.home_recommend==1">是</a-tag>
           <a-tag color="red" v-else>否</a-tag>
         </template>
-        <template slot="productName" slot-scope="t,r">
-          <a-tag color="green" v-if="r.productName">{{ r.productName }}</a-tag>
+        <template slot="belong_id" slot-scope="t,r">
+          <a-tag color="green" v-if="r.belong_id">{{findNodeItem(productData,r.belong_id).title  }}</a-tag>
           <a-tag v-else>无</a-tag>
         </template>
         <template slot="action" slot-scope="r">
@@ -66,7 +74,7 @@
 </template>
 
 <script>
-import { getVideoList,deleteVideoItem,getProductList } from '@/api/manage'
+import { getVideoList,deleteVideoItem,getProductList,classifyMenu } from '@/api/manage'
 import { showMessage,toggleQuery } from '@/utils/mixins'
 import { getFileName } from '@/utils/util'
 import CreateModal from './modules/CreateModal.vue'
@@ -83,9 +91,12 @@ export default {
       loading: false,
       columns: [
         { title: '序号', customRender: (t,r,i) => `${i+1}`, width: 70, align: 'center' },
-        { title: '视频封面图片', dataIndex: 'videoUrl',key: 'videoUrl', width: 450 },
-        { title: '是否推荐', scopedSlots: {customRender: 'homeRecommend'}},
-        { title: '所属产品',scopedSlots: {customRender: 'productName'}},
+        { title: '视频标题', dataIndex: 'title',key: 'title', width: 200 },
+        
+        { title: '视频封面图片', scopedSlots: {customRender: 'video_image_url'}, width: 100},
+        { title: '视频地址', dataIndex: 'video_url',key: 'video_url', minWidth: 250 },
+        { title: '是否推荐', scopedSlots: {customRender: 'home_recommend'}},
+        { title: '所属产品',scopedSlots: {customRender: 'belong_id'}},
         { title: '操作', scopedSlots: { customRender: 'action' }, width: 120, fixed: 'right', align: 'center' }
       ],
       data: [],
@@ -112,19 +123,19 @@ export default {
       for(const key in _form) {
         if(key == 'productId') {
           _form[key] = Number(r[key])
-        }else if(key == 'homeRecommend') {
-          _form[key] = r[key] ? 1 : 0
+        }else if(key == 'home_recommend') {
+          _form[key] = r[key]
         }else {
           _form[key] = r[key]
         }
       }
-      // if(r.videoImageUrl) {
-      //   this.$refs.createModal.fileList.push({
-      //     uid: Math.random(),
-      //     url: r.videoImageUrl.indexOf('http')!=-1 || r.videoImageUrl.indexOf('https')!=-1 ? r.videoImageUrl:process.env.VUE_APP_API_ORIGIN+r.videoImageUrl,
-      //     name: getFileName(r.videoImageUrl)
-      //   })
-      // }
+      if(r.video_image_url) {
+        this.$refs.createModal.fileList.push({
+          uid: Math.random(),
+          url: r.video_image_url,
+          name: getFileName(r.video_image_url)
+        })
+      }
       this.$refs.createModal.status = 2
       this.$refs.createModal.id = r.id
       this.$refs.createModal.title = '修改视频'
@@ -139,33 +150,73 @@ export default {
     // 列表
     getList() {
       this.loading = true
-      getVideoList(this.queryParam).then(res => {
+      const data={
+        page:this.pageNum,
+        pageSize:this.pageSize,
+        title:this.queryParam.title,
+      }
+      getVideoList(data).then(res => {
         this.loading = false
-        if(res.code == '0') {
-          this.data = res.data
+        if(res.code == 200) {
+          this.data = res.data.list
+          this.pagination.total=res.data.total
         }
       })
     },
      //获取系列树结构
-    getProductList() {
-      getProductList().then(res => {
-        if(res.code == '0') {
-          this.productData = res.data
+   async getProductList() {
+    console.log('1111 :>> ', 1111);
+      const res=await classifyMenu({pageSize:50,id:2})
+      console.log('res :>> ', res);
+        if(res.code == 200) {
+          this.productData=res.data
         }
-      })
+      // getProductList().then(res => {
+      //   if(res.code == '0') {
+      //     this.productData = res.data
+      //   }
+      // })
     },
+
+
+
+    /**
+ * 传入参数：需要遍历的json，需要匹配的id(根据id取得对应的那一项)
+ * @param data 数组数据，平级或树形数组皆可
+ * @param val 键值id的值，（唯一）
+ * @param key id 默认（唯一不重复的键值）
+ * @param children 子类
+ * @returns 
+ */
+findNodeItem(data, val, key = 'id', children = 'children') {
+    let temp = '';
+    const forFn = function (arr, id) {
+        for (let i = 0; i < arr.length; i++) {
+            if (temp) break;    // 已经拿到值了,就退出循环
+            const item = arr[i];
+            // 找到值对应的那一项，赋值
+            if (item[key] == val) temp = item;
+
+            if (item[children]) forFn(item[children], id);
+        }
+    };
+    forFn(data, val);
+    return temp;
+}
+
   },
   mounted() {
-    this.getList()
     this.getProductList()
+    this.getList()
   }
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .table-img {
-  width: 160px;
-  height: 90px;
+  width: 70px;
+  height: 70px;
+
 }
 </style>
 

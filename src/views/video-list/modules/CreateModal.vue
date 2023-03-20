@@ -11,14 +11,18 @@
     <a-form-model
       ref="ruleForm"
       :model="form"
+      :rules="rules"
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
       :key="visible"
     >
-      <a-form-model-item label="视频所属">
+      <a-form-model-item label="视频标题" prop="title">
+        <a-input v-model="form.title" placeholder="视频标题" :maxlength="50" />
+      </a-form-model-item>
+      <a-form-model-item label="视频所属" prop="belong_id">
         <a-select
           allowClear
-          v-model="form.productId"
+          v-model="form.belong_id"
           show-search
           placeholder="视频所属"
           option-filter-prop="children"
@@ -29,8 +33,8 @@
           <a-select-option :value="item.id" v-for="item of parent.productData" :key="item.id">{{ item.title }}</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="视频链接">
-        <a-input v-model="form.videoUrl" placeholder="视频链接"></a-input>
+      <a-form-model-item label="视频链接" prop="video_url">
+        <a-input v-model="form.video_url" placeholder="视频链接" :maxlength="255"></a-input>
         <!-- <a-button type="primary" @click="handleAddClick">添加视频链接</a-button>
         <a-row :gutter="[20,20]" style="width: 60%;" v-for="(item,index) of videoUrlList" :key="index">
           <a-col :span="18">
@@ -41,7 +45,7 @@
           </a-col>
         </a-row> -->
       </a-form-model-item>
-      <!-- <a-form-model-item label="视频封面图片">
+      <a-form-model-item label="视频封面图片">
         <a-upload
           list-type="picture-card"
           :file-list="fileList"
@@ -56,15 +60,15 @@
             <div class="ant-upload-text">添加视频封面(比例16:9)</div>
           </div>
         </a-upload>
-      </a-form-model-item> -->
+      </a-form-model-item>
       <a-form-model-item label="是否推荐到首页">
-        <a-select v-model="form.homeRecommend" placeholder="是否推荐到首页" style="width:50%;">
+        <a-select v-model="form.home_recommend" placeholder="是否推荐到首页" style="width:50%;">
           <a-select-option :value="1">是</a-select-option>
-          <a-select-option :value="0">否</a-select-option>
+          <a-select-option :value="2">否</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="排序">
-        <a-input-number v-model="form.orderNum" placeholder="排序"></a-input-number>
+        <a-input-number v-model="form.sort" placeholder="排序"></a-input-number>
       </a-form-model-item>
     </a-form-model>
     <div
@@ -111,11 +115,19 @@ export default {
       labelCol: { span: 3 },
       wrapperCol: { span: 21 },
       form: {
-        productId: undefined,
-        videoUrl: undefined,
-        // videoImageUrl: undefined,
-        orderNum: 0,
-        homeRecommend: undefined
+        title:undefined,
+        belong_id: undefined,
+        video_url: undefined,
+        video_image_url: undefined,
+        sort: 0,
+        home_recommend: undefined
+      },
+      rules: {
+        title: [{ required: true, message: '视频标题不能为空', trigger: 'blur' }],
+        belong_id: [{ required: true, message: '所属系列不能为空', trigger: 'blur' }],
+        video_url: [{ required: true, message: '视频链接不能为空', trigger: 'blur' }],
+        video_image_url: [{ required: true, message: '封面图片不能为空', trigger: 'blur' }],
+        classify: [{ required: true, message: '所属系列不能为空', trigger: 'change' }],
       },
       videoUrlList: [],
       visible: false,
@@ -129,9 +141,9 @@ export default {
   methods: {
     handleVideoChange(val) {
       if(!val) {
-        this.form.productId = 0
+        this.form.belong_id = 0
       }else {
-        this.form.productId = val
+        this.form.belong_id = val
       }
     },
     //删除
@@ -157,11 +169,11 @@ export default {
           // const _index = this.fileList.findIndex(item => item == file.url)
           this.showMessage(res,() => {
             this.fileList = []
-            this.form.videoImageUrl = ''
+            this.form.video_image_url = ''
             // this.fileList.splice(_index,1)
             // const _temp = []
             // this.fileList.forEach(item => _temp.push(item.url))
-            // this.form.videoImageUrl = _temp.join(',')
+            // this.form.video_image_url = _temp.join(',')
           })
         }
       })
@@ -178,13 +190,13 @@ export default {
       const formdata = new FormData()
       formdata.append('file', file.file)
       uploadFile(formdata).then(res => {
-        if(res.code == '0') {
-          file.url = process.env.VUE_APP_API_ORIGIN+res.data
+        if(res.code == 200) {
+          file.url = res.data.file
           file.uid = Math.random()
-          file.fileame = getFileName( res.data )
+          file.fileame = getFileName( res.data.file )
           _this.fileList.push(file)
           // _this.form.images.push(res.data)
-          _this.form.videoImageUrl = res.data
+          _this.form.video_image_url = res.data.file
         }else {
           _this.$message.error(res.message)
         }
@@ -198,7 +210,7 @@ export default {
       this.status = undefined
       this.id = undefined
       for(const key in this.form) {
-        if(key == 'orderNum') {
+        if(key == 'sort') {
           this.form[key] = 0
         }else {
           this.form[key] = undefined
@@ -207,29 +219,52 @@ export default {
     },
     // 提交
     onSubmit() {
+      // console.log('this.form.belong_id :>> ', this.form.belong_id);
+      // return false;
       this.$refs.ruleForm.validate((vaild) => {
         if (vaild) {
           // this.form.videoUrl = this.videoUrlList.join(',')
           // const _arrs = []
           // this.fileList.forEach(item =>  _arrs.push(item.url))
-          // this.form.videoImageUrl =_arrs.join(',')
-          this.form.homeRecommend = this.form.homeRecommend == 1 ? true : 0
+          // this.form.video_image_url =_arrs.join(',')
+
+          if(!this.form.video_image_url) return this.$message.warning('视频封面不能为空')
+
+
           if(this.status == 1) {
-            addVideoItem(this.form).then(res => {
-              this.showMessage(res,() => {
-                this.onClose()
-                this.parent.getList()
-              })
+            const data={
+              title:this.form.title||'',
+              home_recommend:this.form.home_recommend||2,
+              video_url:this.form.video_url||'',
+              video_image_url:this.form.video_image_url||'',
+              belong_id:this.form.belong_id||'',
+              sort:this.form.sort||0,
+            }
+            addVideoItem(data).then(res => {
+              if(res.code==200){
+                this.showMessage({code:200,message:'添加成功'},() => {
+                  this.onClose()
+                  this.parent.getList()
+                })
+              }
             })
           }else {
-            updateVideoItem({
+            const data={
               id: this.id,
-              ...this.form
-            }).then(res => {
-              this.showMessage(res,() => {
-                this.onClose()
-                this.parent.getList()
-              })
+              title:this.form.title||'',
+              home_recommend:this.form.home_recommend||2,
+              video_url:this.form.video_url||'',
+              video_image_url:this.form.video_image_url||'',
+              belong_id:this.form.belong_id||'',
+              sort:this.form.sort||0,
+            }
+            updateVideoItem(data).then(res => {
+              if(res.code==200){
+                this.showMessage({code:200,message:'修改成功'},() => {
+                  this.onClose()
+                  this.parent.getList()
+                })
+              }
             })
           }
         } else {

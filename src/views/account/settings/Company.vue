@@ -12,13 +12,15 @@
               v-model="form.profile"
               placeholder="公司简介"
               :auto-size="{ minRows: 3, maxRows: 5 }"
+              :maxlength="800"
             />
           </a-form-item>
           <a-form-item label="英文公司简介" v-else>
             <a-textarea
-              v-model="form.profileEn"
+              v-model="form.profile_en"
               placeholder="英文公司简介"
               :auto-size="{ minRows: 3, maxRows: 5 }"
+              :maxlength="800"
             />
           </a-form-item>
           <!-- <a-form-item label="公司描述">
@@ -29,41 +31,45 @@
             />
           </a-form-item> -->
           <a-form-item label="价值观" v-if="tabkey=='1'">
-            <a-input v-model="form.worth" placeholder="价值观" />
+            <a-input v-model="form.worth" placeholder="价值观" :maxlength="80" />
           </a-form-item>
           <a-form-item label="英文价值观" v-else>
-            <a-input v-model="form.worthEn" placeholder="英文价值观" />
+            <a-input v-model="form.worth_en" placeholder="英文价值观" :maxlength="80" />
           </a-form-item>
           <a-form-item label="企业文化" v-if="tabkey=='1'">
             <a-textarea
-              v-model="form.corporateCulture"
+              v-model="form.corporate_culture"
               placeholder="企业文化"
               :auto-size="{ minRows: 3, maxRows: 5 }"
+              :maxlength="1000"
             />
           </a-form-item>
           <a-form-item label="英文企业文化" v-else>
             <a-textarea
-              v-model="form.corporateCultureEn"
+              v-model="form.corporate_culture_en"
               placeholder="英文企业文化"
               :auto-size="{ minRows: 3, maxRows: 5 }"
+              :maxlength="1000"
             />
           </a-form-item>
           <a-row :gutter="20">
             <a-col :span="8">
               <a-form-item label="办事处多年行业经验技术团队">
                 <a-input-number
-                  v-model="form.serviceProvince"
+                  v-model="form.service_province"
                   placeholder="技术团队数量"
                   style="width:100%;"
+                  :maxlength="10"
                 />
               </a-form-item>
             </a-col>
             <a-col :span="8">
               <a-form-item label="省市自治区的产品和服务覆盖">
                 <a-input-number
-                  v-model="form.serviceOffice"
+                  v-model="form.service_office"
                   placeholder="产品和服务覆盖数量"
                   style="width:100%;"
+                  :maxlength="10"
                 />
               </a-form-item>
             </a-col>
@@ -71,17 +77,17 @@
           <a-row :gutter="20">
             <a-col :span="8">
               <a-form-model-item label="售前技术团队电话">
-                <a-input v-model="form.servicePreSalesTechnicalTeamTel" style="width: 100%" placeholder="售前技术团队电话"/>
+                <a-input v-model="form.service_pre_sales_technical_team_tel" style="width: 100%" placeholder="售前技术团队电话" :maxlength="30" />
               </a-form-model-item>
             </a-col>
             <a-col :span="8">
               <a-form-model-item label="售后技术团队电话">
-                <a-input v-model="form.serviceAfterSalesTechnicalTeamTel" style="width:100%" placeholder="售前技术团队电话"/>
+                <a-input v-model="form.service_after_sales_technical_team_tel" style="width:100%" placeholder="售前技术团队电话"  :maxlength="30"/>
               </a-form-model-item>
             </a-col>
           </a-row>
           <a-form-item label="备案号">
-            <a-input v-model="form.beian" placeholder="备案号" />
+            <a-input v-model="form.record" placeholder="备案号" :maxlength="100" />
           </a-form-item>
           <a-form-item label="公司荣誉配图">
             <a-upload
@@ -93,7 +99,7 @@
               class="upload-half"
               accept="image/*"
             >
-              <div class="custom-btn" v-if="fileList.length<1">
+              <div class="custom-btn" v-if="fileList2.length<1">
                 <a-icon type="ant-cloud" style="font-size: 26px" />
                 <div class="ant-upload-text">添加图片</div>
               </div>
@@ -140,19 +146,20 @@ export default {
     return {
       tabkey: '1',
       form: {
+        id:'',
         profile: undefined,
-        profileEn: undefined,
-        corporateCulture: undefined,
-        corporateCultureEn: undefined,
-        corporateCultureImage: undefined,
-        serviceProvince: undefined,
-        servicePreSalesTechnicalTeamTel: undefined,
-        serviceAfterSalesTechnicalTeamTel: undefined,
-        serviceOffice: undefined,
+        profile_en: undefined,
+        corporate_culture: undefined,
+        corporate_culture_en: undefined,
+        corporate_culture_image: undefined,
+        service_province: undefined,
+        service_pre_sales_technical_team_tel: undefined,
+        service_after_sales_technical_team_tel: undefined,
+        service_office: undefined,
         worth: undefined,
-        worthEn: undefined,
+        worth_en: undefined,
         // description: undefined,
-        beian: undefined,
+        record: undefined,
         honor: undefined
       },
       previewVisible: false,
@@ -186,12 +193,12 @@ export default {
       const formdata = new FormData()
       formdata.append('file', file)
       uploadFile(formdata).then(res => {
-        if(res.code == '0') {
-          file.url = process.env.VUE_APP_API_ORIGIN+res.data
+        if(res.code == 200) {
+          file.url = res.data.file
           file.uid = Math.random()
-          file.fileame = getFileName( res.data )
+          file.fileame = getFileName( res.data.file )
           _this.fileList2.push(file)
-          _this.form.honor = res.data
+          _this.form.honor = res.data.file
         }else {
           _this.$message.error(res.message)
         }
@@ -204,12 +211,12 @@ export default {
       const formdata = new FormData()
       formdata.append('file', file)
       uploadFile(formdata).then(res => {
-        if(res.code == '0') {
-          file.url = process.env.VUE_APP_API_ORIGIN+res.data
+        if(res.code == 200) {
+          file.url = res.data.file
           file.uid = Math.random()
-          file.fileame = getFileName( res.data )
+          file.fileame = getFileName( res.data.file )
           _this.fileList.push(file)
-          _this.form.corporateCultureImage = res.data
+          _this.form.corporate_culture_image = res.data.file
         }else {
           _this.$message.error(res.message)
         }
@@ -218,20 +225,55 @@ export default {
     // 获取公司介绍
     getCompanyDetail() {
       getCompanyDetail().then(res => {
-        if(res.code == '0') {
+//     {
+    //   name: '',
+    //   id: 1,
+    //   name_en: undefined,
+    //   tel: undefined,
+    //   address: undefined,
+    //   address_en: undefined,
+    //   wx_code: undefined,
+    //   shop_code: undefined,
+    //   qq: undefined,
+    //   email: undefined,
+    //   profile: undefined,
+    //   profile_en: undefined,
+    //   corporate_culture: undefined,
+    //   corporate_culture_en: undefined,
+    //   corporate_culture_image: undefined,
+    //   description: undefined,
+    //   description_en: undefined,
+    //   establish_date: undefined,
+    //   service_province: undefined,
+    //   service_office: undefined,
+    //   seo_keyword: undefined,
+    //   seo_description: undefined,
+    //   logo: undefined,
+    //   logo_mobile: undefined,
+    //   worth: undefined,
+    //   worth_en: undefined,
+    //   service_pre_sales_technical_team_tel: undefined,
+    //   service_after_sales_technical_team_tel: undefined,
+    //   record: undefined,
+    //   honor: undefined,
+    //   created_at: 2023-03-20T02:27:08.802Z,
+    //   updated_at: 2023-03-20T02:27:08.802Z
+    // }
+
+        if(res.code == 200) {
           for(const key in this.form) {
             this.form[key] = res.data[key]
           }
-          if(res.data.corporateCultureImage) {
+          if(res.data.corporate_culture_image) {
             this.fileList = [{
               uid: Math.random(),
-              url: process.env.VUE_APP_API_ORIGIN+res.data.corporateCultureImage
+              url: res.data.corporate_culture_image
             }]
           }
           if(res.data.honor) {
             this.fileList2 = [{
               uid: Math.random(),
-              url: process.env.VUE_APP_API_ORIGIN+res.data.honor
+              url: res.data.honor
             }]
           }
           
@@ -243,8 +285,8 @@ export default {
       this.loading = true
       updateCompanyInfo(this.form).then(res => {
         this.loading = false
-        if(res.code == '0') {
-          this.showMessage(res,this.getCompanyDetail)
+        if(res.code == 200) {
+          this.showMessage({code:200,message:'设置成功'},this.getCompanyDetail)
         }
       })
     }

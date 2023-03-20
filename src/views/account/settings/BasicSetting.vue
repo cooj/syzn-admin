@@ -8,38 +8,39 @@
       <a-col :order="isMobile ? 2 : 1" :md="16" :lg="16">
         <a-form layout="vertical" :form="form">
           <a-form-item label="公司名称" v-if="tabkey=='1'">
-            <a-input placeholder="公司名称" v-model="form.name" />
+            <a-input placeholder="公司名称" v-model="form.name" :maxlength="80" />
           </a-form-item>
           <a-form-item label="英文公司名称" v-else>
-            <a-input placeholder="英文公司名称" v-model="form.nameEn" />
+            <a-input placeholder="英文公司名称" v-model="form.name_en" :maxlength="80" />
           </a-form-item>
           <a-form-item label="公司地址" v-if="tabkey=='1'">
-            <a-input placeholder="公司地址" v-model="form.address" />
+            <a-input placeholder="公司地址" v-model="form.address" :maxlength="200" />
           </a-form-item>
           <a-form-item label="英文公司地址" v-else>
-            <a-input placeholder="英文公司地址" v-model="form.addressEn" />
+            <a-input placeholder="英文公司地址" v-model="form.address_en"  :maxlength="200" />
           </a-form-item>
           <a-form-item label="公司成立时间">
-            <a-date-picker v-model="form.establishDate" valueFormat="YYYY-MM-DD" style="width:50%" />
+            <a-date-picker v-model="form.establish_date" valueFormat="YYYY-MM-DD" style="width:50%" />
           </a-form-item>
           <a-form-item label="客服QQ">
-            <a-input-number placeholder="客服QQ" v-model="form.qq" style="width:50%;" />
+            <a-input-number placeholder="客服QQ" v-model="form.qq" style="width:50%;" :maxlength="20" />
           </a-form-item>
           <a-form-item label="服务热线">
-            <a-input placeholder="服务热线" v-model="form.tel" style="width: 100%" />
+            <a-input placeholder="服务热线" v-model="form.tel" style="width: 100%"  :maxlength="30" />
           </a-form-item>
           <a-form-item label="网站seo关键字">
-            <a-input placeholder="seo关键字" v-model="form.seoKeyword" />
+            <a-input placeholder="seo关键字" v-model="form.seo_keyword" :maxlength="150" />
           </a-form-item>
           <a-form-item label="网站seo描述">
             <a-textarea
-              v-model="form.seoDescription"
+              v-model="form.seo_description"
               placeholder="网站seo描述"
               :auto-size="{ minRows: 3, maxRows: 5 }"
+              :maxlength="200"
             />
           </a-form-item>
           <a-form-item label="邮箱">
-            <a-input placeholder="邮箱" v-model="form.email" />
+            <a-input placeholder="邮箱" v-model="form.email" :maxlength="30" />
           </a-form-item>
           <a-form-item label="公司Logo1">
             <a-upload
@@ -67,7 +68,7 @@
               class="upload-half"
               accept="image/*"
             >
-              <div class="custom-btn" v-if="fileList.length<1">
+              <div class="custom-btn" v-if="fileList2.length<1">
                 <a-icon type="ant-cloud" style="font-size: 26px" />
                 <div class="ant-upload-text">添加图片</div>
               </div>
@@ -79,7 +80,7 @@
               <div class="mask">
                 <a-icon type="plus" />
               </div>
-              <img :src="locationOrigin+option.img2" />
+              <img v-if="option.img2" :src="option.img2" />
             </div>
           </a-form-item>
           <a-form-item label="二维码">
@@ -88,7 +89,7 @@
               <div class="mask">
                 <a-icon type="plus" />
               </div>
-              <img :src="locationOrigin+option.img" />
+              <img v-if="option.img" :src="option.img" />
             </div>
           </a-form-item>
           <a-form-item>
@@ -122,19 +123,21 @@ export default {
       tabkey: '1',
       preview: {},
       form: {
+        id:'',
         qq: undefined,
         name: undefined,
-        nameEn: undefined,
-        establishDate: undefined,
+        name_en: undefined,
+        establish_date: undefined,
         tel: undefined,
         logo: undefined,
+        logo_mobile: undefined,
         address: undefined,
-        addressEn: undefined,
+        address_en: undefined,
         email: undefined,
-        weixin: undefined,
-        seoKeyword: undefined,
-        seoDescription: undefined,
-        shopmall: undefined
+        wx_code: undefined,
+        seo_keyword: undefined,
+        seo_description: undefined,
+        shop_code: undefined
       },
       option: {
         img: '',
@@ -156,23 +159,22 @@ export default {
       fileList2: [],
       previewVisible: false,
       previewImage: '',
-      locationOrigin: process.env.VUE_APP_API_ORIGIN
     }
   },
   methods: {
     // 公司logo 2
-    handleUploadChange2() {
+    handleUploadChange2(file) {
       file = file.file
       const _this = this
       const formdata = new FormData()
       formdata.append('file', file)
       uploadFile(formdata).then(res => {
-        if(res.code == '0') {
-          file.url = process.env.VUE_APP_API_ORIGIN+res.data
+        if(res.code == 200) {
+          file.url = res.data.file
           file.uid = Math.random()
-          file.fileame = getFileName( res.data )
+          file.fileame = getFileName( res.data.file )
           _this.fileList2.push(file)
-          _this.form.logoMobile = res.data
+          _this.form.logo_mobile = res.data.file
         }else {
           _this.$message.error(res.message)
         }
@@ -185,12 +187,12 @@ export default {
       const formdata = new FormData()
       formdata.append('file', file)
       uploadFile(formdata).then(res => {
-        if(res.code == '0') {
-          file.url = process.env.VUE_APP_API_ORIGIN+res.data
+        if(res.code == 200) {
+          file.url = res.data.file
           file.uid = Math.random()
-          file.fileame = getFileName( res.data )
+          file.fileame = getFileName( res.data.file )
           _this.fileList.push(file)
-          _this.form.logo = res.data
+          _this.form.logo = res.data.file
         }else {
           _this.$message.error(res.message)
         }
@@ -207,7 +209,7 @@ export default {
         if(res.code == '0') {
           this.showMessage(res,() => {
             this.fileList2 = []
-            this.form.logoMobile = ''
+            this.form.logo_mobile = ''
           })
         }
       })
@@ -225,32 +227,33 @@ export default {
     },
     setavatar (url,id) {
       if(id == 1) {
-        this.form.weixin = url
+        this.form.wx_code = url
         this.option.img = url
       }else {
-        this.form.shopmall = url
+        this.form.shop_code = url
         this.option.img2 = url
       }
     },
     // 获取公司介绍
     getCompanyDetail() {
       getCompanyDetail().then(res => {
-        if(res.code == '0') {
+
+        if(res.code == 200) {
           for(const key in this.form) {
             this.form[key] = res.data[key]
           }
           if(res.data.logo) {
             this.fileList = [
-              {uid: Math.random(),name: getFileName(res.data.logo),url: process.env.VUE_APP_API_ORIGIN+res.data.logo}
+              {uid: Math.random(),name: getFileName(res.data.logo),url: res.data.logo}
             ]
           }
-          if(res.data.logoMobile) {
+          if(res.data.logo_mobile) {
             this.fileList2 = [
-              {uid: Math.random(),name: getFileName(res.data.logoMobile),url: process.env.VUE_APP_API_ORIGIN+res.data.logoMobile}
+              {uid: Math.random(),name: getFileName(res.data.logo_mobile),url: res.data.logo_mobile}
             ]
           }
-          this.option.img = res.data.weixin || ''
-          this.option.img2 = res.data.shopmall || ''
+          this.option.img = res.data.wx_code || ''
+          this.option.img2 = res.data.shop_code || ''
         }
       })
     },
@@ -259,8 +262,8 @@ export default {
       this.loading = true
       updateCompanyInfo(this.form).then(res => {
         this.loading = false
-        if(res.code == '0') {
-          this.showMessage(res,this.getCompanyDetail)
+        if(res.code == 200) {
+          this.showMessage({code:200,message:'设置成功'},this.getCompanyDetail)
         }
       })
     }

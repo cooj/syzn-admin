@@ -33,17 +33,6 @@
           allow-clear
           tree-default-expand-all
         >
-          <!-- <a-tree-select-node key="0-1" value="parent 1" title="parent 1">
-            <a-tree-select-node key="0-1-1" value="parent 1-0" title="parent 1-0">
-              <a-tree-select-node key="random" value="leaf1" title="my leaf" />
-              <a-tree-select-node key="random1" value="leaf2" title="your leaf" />
-            </a-tree-select-node>
-            <a-tree-select-node key="random2" value="parent 1-1" title="parent 1-1">
-              <a-tree-select-node key="random3" value="sss">
-                <template #title><b style="color: #08c">sss</b></template>
-              </a-tree-select-node>
-            </a-tree-select-node>
-          </a-tree-select-node> -->
         </a-tree-select>
 
       </a-form-model-item>
@@ -65,8 +54,8 @@
           <a-radio :value="2">否</a-radio>
         </a-radio-group>
       </a-form-model-item>
-
-      <a-form-model-item label="图片" v-if="form.type==2" required>
+      <!-- v-if="form.type==2" -->
+      <a-form-model-item label="图片">
         <a-upload
           :customRequest="handleUploadChange"
           list-type="picture-card"
@@ -189,7 +178,7 @@ lookForAllId(data = [],id, arr = []) {
           file.uid = Math.random()
           file.fileame = getFileName( res.data.file )
           _this.fileList.push(file)
-          _this.form.imgUrl = res.data.file
+          _this.form.img = res.data.file
         }else {
           _this.$message.error(res.message)
         }
@@ -215,6 +204,7 @@ lookForAllId(data = [],id, arr = []) {
                 title: this.form.title||'',   // 标题 
                 title_en: this.form.title_en||'',   //  
                 href: this.form.href||'',   // 链接 
+                img:this.form.img||'',
                 sort: this.form.sort||0,   //  排序
                 is_show: this.form.is_show|| 2,    // 是否显示
             }
@@ -238,6 +228,7 @@ lookForAllId(data = [],id, arr = []) {
                 title: this.form.title||'',   // 标题 
                 title_en: this.form.title_en||'',   //  
                 href: this.form.href||'',   // 链接 
+                img:this.form.img||'',
                 sort: this.form.sort||0,   //  排序
                 is_show: this.form.is_show|| 2,    // 是否显示
             }

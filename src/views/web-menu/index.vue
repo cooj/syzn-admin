@@ -102,12 +102,13 @@ export default {
       }
 
       // 这是系列带图片的菜单
-      if (r.type == 2) {
+      //if (r.type == 2) {}
+      if(r.img){
         this.$refs.createModal.fileList = [
           {
             name: r.title,
             uid: r.id,
-            url: process.env.VUE_APP_API_ORIGIN + r.imgUrl || ''
+            url: r.img || ''
           }
         ]
       }
