@@ -314,9 +314,7 @@ export default {
     },
     // 提交
     onSubmit() {
-      console.log('1 :>> ', 1);
       this.$refs.ruleForm.validate((vaild) => {
-        console.log('vaild :>> ', vaild);
         if (vaild) {
           if(!this.form.images.length) {
             this.$message.warning('请添加产品图片')
@@ -334,10 +332,10 @@ export default {
               description_en:this.form.description_en||'',
               content:this.form.content||'',
               content_en:this.form.content_en||'',
-              description:this.form.description||'',
+              classify_id:this.form.classify||'',
               seo_keyword:this.form.seo_keyword||'',
               seo_description:this.form.seo_description||'',
-              image_url:this.form.images[0]||'',
+              image_url:this.form.images.join(','),
               sort:this.form.sort||0,
             }
 
@@ -350,14 +348,27 @@ export default {
               }
             })
           }else {
-            updateProduct({
+            const data={
               id: this.id,
-              ...this.form
-            }).then(res => {
-              this.showMessage(res,() => {
+              title:this.form.title||'',
+              title_en:this.form.title_en||'',
+              description:this.form.description||'',
+              description_en:this.form.description_en||'',
+              content:this.form.content||'',
+              content_en:this.form.content_en||'',
+              classify_id:this.form.classify||'',
+              seo_keyword:this.form.seo_keyword||'',
+              seo_description:this.form.seo_description||'',
+              image_url:this.form.images.join(','),
+              sort:this.form.sort||0,
+            }
+            updateProduct(data).then(res => {
+              if(res.code==200){
+              this.showMessage({code:200,message:'修改成功'},() => {
                 this.onClose()
                 this.parent.getList()
-              })
+              })                
+              }
             })
           }
         } else {

@@ -51,7 +51,7 @@
           <a-tag color="red" v-else>否</a-tag>
         </template>
         <template slot="belong_id" slot-scope="t,r">
-          <a-tag color="green" v-if="r.belong_id">{{findNodeItem(productData,r.belong_id).title  }}</a-tag>
+          <a-tag color="green" v-if="r.belong_id">{{ findNodeItem(productData,r.belong_id).title }}</a-tag>
           <a-tag v-else>无</a-tag>
         </template>
         <template slot="action" slot-scope="r">

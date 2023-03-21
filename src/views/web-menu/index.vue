@@ -11,7 +11,7 @@
           <a-tag v-else color="red">系列菜单</a-tag>
         </template>
         <template slot="is_show" slot-scope="r">
-          <a-tag v-if="r.type == 1" color="green">是</a-tag>
+          <a-tag v-if="r.is_show == 1" color="green">是</a-tag>
           <a-tag v-else color="red">否</a-tag>
         </template>
         <template slot="action" slot-scope="r">

@@ -43,7 +43,11 @@
         :pagination="pagination"
       >
         <template slot="image_url" slot-scope="r">
-          <img :src="r.image_url" alt="" class="table-img" />
+          <img :src="showImg(r.image_url)" alt="" class="table-img" />
+        </template>
+        <template slot="classify_id" slot-scope="t,r">
+          <a-tag color="green" v-if="r.classify_id">{{ r.classify_name }}</a-tag>
+          <a-tag v-else>无</a-tag>
         </template>
         <template slot="action" slot-scope="r">
           <a @click="handleEditorClick(r)">修改</a>
@@ -68,6 +72,7 @@
 import { getProductList,getMenuTree,deleteProduct,classifyMenu } from '@/api/manage'
 import { showMessage,toggleQuery } from '@/utils/mixins'
 import CreateModal from './modules/CreateModal.vue'
+import {findNodeItem} from '@/utils/util'
 
 export default {
   name: 'Product',
@@ -83,7 +88,7 @@ export default {
         { title: '序号', customRender: (t,r,i) => `${i+1}`, width: 70, align: 'center' },
         { title: '产品图片', scopedSlots: { customRender: 'image_url' },align:'center',width: 120 },
         { title: '产品名称', dataIndex: 'title',key: 'title'},
-        {title: '产品系列',dataIndex: 'classify_name',key: 'classify_name'},
+        {title: '产品系列',scopedSlots: { customRender: 'classify_id' }, width: 160,},
         { title: '操作', scopedSlots: { customRender: 'action' }, width: 120, fixed: 'right', align: 'center' }
       ],
       data: [],
@@ -100,6 +105,10 @@ export default {
     }
   },
   methods: {
+    showImg(str){
+      const imgArr=str?str.split(','):[]
+      return imgArr[0]
+    },
     // 增加
     handleAddClick() {
       this.$refs.createModal.status = 1
@@ -114,16 +123,34 @@ export default {
     },
     // 修改
     handleEditorClick(r) {
+      console.log('r :>> ', r);
       const _form = this.$refs.createModal.form
       for(const key in _form) {
         if(key != 'images') {
-          if(key == 'category1') {
-            _form[key] = Number(r[key])
+          if(key == 'classify') {
+            _form[key] = Number(r['classify_id'])
           }else {
             _form[key] = r[key]
           }
         }
       }
+      const imgArr=r.image_url?r.image_url.split(','):[]
+      this.$refs.createModal.form.images=imgArr;
+      imgArr.forEach(item=>{
+        // Math.random()
+        this.$refs.createModal.fileList.push({
+            name: Math.random()+r.title,
+            uid: Math.random(),
+            url: item || ''
+          })
+      })
+      // if(imgArr.length>0){
+      //   this.$refs.createModal.fileList.push({
+      //       name: r.title,
+      //       uid: r.id,
+      //       url: r.image_url || ''
+      //     })
+      // }
       this.$refs.createModal.status = 2
       this.$refs.createModal.id = r.id
       this.$refs.createModal.title = '修改产品'

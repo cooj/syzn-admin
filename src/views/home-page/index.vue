@@ -3,6 +3,8 @@
     <a-card class="content-card">
       <div>
         <a-button icon="plus" type="primary" @click="hanldeAddClick(1)" style="margin-bottom:20px;">新增第一屏</a-button>
+        <a-button icon="plus" type="primary" @click="hanldeAddClick(2)" style="margin-bottom:20px;margin-left:20px;">新增第二屏</a-button>
+        <a-button icon="plus" type="primary" @click="hanldeAddClick(5)" style="margin-bottom:20px;margin-left:20px;">新增第三屏</a-button>
         <a-button icon="plus" type="primary" @click="hanldeAddClick(4)" style="margin-bottom:20px;margin-left:20px;">新增第四屏</a-button>
       </div>
       <a-table 
@@ -18,8 +20,8 @@
         </template>
         <template slot="type" slot-scope="r">
           <a-tag v-if="r.type == 1" color="green">链接</a-tag>
-          <a-tag v-else-if="r.type == 2" color="green">图片</a-tag>
-          <a-tag v-else-if="r.type == 3" color="green">产品</a-tag>
+          <a-tag v-else-if="r.type == 2" color="blue">图片</a-tag>
+          <a-tag v-else-if="r.type == 3" color="orange">其他</a-tag>
         </template>
         <template slot="action" slot-scope="t, r, i">
           <a @click="handleEditorClick(r, i)">修改</a>
@@ -89,7 +91,7 @@ export default {
         _form[key] = r[key]
       }
       this.$refs.createModal.fileList = [
-        {name: getFileName(r.imageUrl),uid: r.id,url: process.env.VUE_APP_API_ORIGIN+r.imageUrl}
+        {name: getFileName(r.image_url),uid: r.id,url: r.image_url}
       ]
       this.$refs.createModal.id = r.id
       this.$refs.createModal.title = `修改第${r.screen}屏`
@@ -98,9 +100,9 @@ export default {
     },
     // 获取首页数据
     getList() {
-      getHomePageList().then(res => {
+      getHomePageList({pageSize:50}).then(res => {
         if(res.code == 200) {
-          this.data = res.data
+          this.data = res.data.list
         }
       })
     }

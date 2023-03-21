@@ -15,7 +15,7 @@
     <a-form-model 
       ref="ruleForm"
       :model="form" 
-      :rule="rules"
+      :rules="rules"
       :label-col="labelCol" 
       :wrapper-col="wrapperCol" 
       :key="visible"
@@ -37,13 +37,13 @@
 
       </a-form-model-item>
       <a-form-model-item label="菜单名称" prop="title" v-if="tabkey=='1'">
-        <a-input v-model="form.title" />
+        <a-input v-model="form.title" :maxLength="20"/>
       </a-form-model-item>
       <a-form-model-item label="英文菜单名称" prop="title_en" v-else>
-        <a-input v-model="form.title_en" />
+        <a-input v-model="form.title_en" :maxLength="20"/>
       </a-form-model-item>
       <a-form-model-item label="链接地址" prop="href" :disabled="tabkey=='2'">
-        <a-input v-model="form.href" />
+        <a-input v-model="form.href" :maxLength="100"/>
       </a-form-model-item>
       <a-form-model-item label="排序">
         <a-input-number style="width:100px" v-model="form.sort" />
@@ -124,6 +124,7 @@ export default {
       rules: {
         title: [{required: true,message: '菜单名称不能为空',trigger: 'blur'}],
         title_en: [{required: true,message: '英文菜单名称不能为空',trigger: 'blur'}],
+        href: [{required: true,message: '英文菜单名称不能为空',trigger: 'blur'}],
       },
       status: undefined,
       fileList: [],
@@ -252,9 +253,11 @@ lookForAllId(data = [],id, arr = []) {
       this.status = undefined
       this.visible = false
       this.id = undefined
+      this.fileList = []
       for(const key in this.form) {
         this.form[key] = undefined
       }
+
       this.tabkey = '1'
     }
   }

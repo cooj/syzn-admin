@@ -87,10 +87,14 @@ const api = {
 
 
   // getHomePageList: '/manage/homeImage/list', // 获取首页
-  getHomePageList: '/api/v1/banner/list', // 获取首页
-  updateHOmePageList: '/manage/homeImage/update', // 修改首页
-  addHomePageInfo: '/manage/homeImage/insert', // 新增首页
-  deleteHomPageInfo: '/manage/homeImage/delete', // 删除第一屏的轮播图
+  // updateHOmePageList: '/manage/homeImage/update', // 修改首页
+  // addHomePageInfo: '/manage/homeImage/insert', // 新增首页
+  // deleteHomPageInfo: '/manage/homeImage/delete', // 删除第一屏的轮播图
+
+  getHomePageList: '/api/v1/home/list', // 获取首页
+  updateHOmePageList: '/api/v1/home/update', // 修改首页
+  addHomePageInfo: '/api/v1/home/insert', // 新增首页
+  deleteHomPageInfo: '/api/v1/home/delete', // 删除第一屏的轮播图
 
   // getVideoList: '/manage/video/list', //获取视频列表
   // addVideoItem: '/manage/video/insert', // 新增视频
