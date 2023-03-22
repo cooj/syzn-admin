@@ -68,7 +68,7 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="排序">
-        <a-input-number v-model="form.sort" placeholder="排序"></a-input-number>
+        <a-input-number v-model="form.sort" placeholder="排序" :maxlength="10"></a-input-number>
       </a-form-model-item>
     </a-form-model>
     <div
@@ -164,6 +164,9 @@ export default {
     },
     // 删除视频封面
     hanldeImgRemove(file) {
+      this.fileList = []
+            this.form.video_image_url = ''
+            return
       deleteFile({filePath: file.url}).then(res => {
         if(res.code == '0') {
           // const _index = this.fileList.findIndex(item => item == file.url)

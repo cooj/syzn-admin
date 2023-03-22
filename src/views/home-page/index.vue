@@ -6,6 +6,7 @@
         <a-button icon="plus" type="primary" @click="hanldeAddClick(2)" style="margin-bottom:20px;margin-left:20px;">新增第二屏</a-button>
         <a-button icon="plus" type="primary" @click="hanldeAddClick(5)" style="margin-bottom:20px;margin-left:20px;">新增第三屏</a-button>
         <a-button icon="plus" type="primary" @click="hanldeAddClick(4)" style="margin-bottom:20px;margin-left:20px;">新增第四屏</a-button>
+        <a-button icon="plus" type="primary" @click="hanldeAddClick(5)" style="margin-bottom:20px;margin-left:20px;">新增第五屏</a-button>
       </div>
       <a-table 
         size="middle" 

@@ -17,7 +17,7 @@
       :key="visible"
     >
       <a-form-model-item label="文件名" prop="name">
-        <a-input v-model="form.name" placeholder="文件名" />
+        <a-input v-model="form.name" placeholder="文件名" :maxLength="30" />
       </a-form-model-item>
       <!-- <a-form-model-item label="所属系列" prop="series">
         <a-select
@@ -109,13 +109,14 @@ export default {
   methods: {
     // 删除图片
     hanldeImgRemove(file) {
-      deleteFile({filePath: file.url}).then(res => {
-        if(res.code == '0') {
-          this.showMessage(res,() => {
-            this.fileList = []
-          })
-        }
-      })
+      this.fileList = []
+      // deleteFile({filePath: file.url}).then(res => {
+      //   if(res.code == '0') {
+      //     this.showMessage(res,() => {
+      //       this.fileList = []
+      //     })
+      //   }
+      // })
     },
     //自定义上传图片
     handleUploadChange(file) {

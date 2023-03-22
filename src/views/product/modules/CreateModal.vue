@@ -27,10 +27,10 @@
         <a-input v-model="form.title_en" placeholder="英文产品名称" :maxlength="50" />
       </a-form-model-item>
       <a-form-model-item label="产品描述" prop="description" v-if="tabkey=='1'">
-        <a-textarea v-model="form.description" placeholder="产品描述" :auto-size="{ minRows: 3, maxRows: 5 }" />
+        <a-textarea v-model="form.description" placeholder="产品描述" :auto-size="{ minRows: 3, maxRows: 5 }" :maxlength="255" />
       </a-form-model-item>
       <a-form-model-item label="英文产品描述" prop="description_en" v-else>
-        <a-textarea v-model="form.description_en" placeholder="英文产品描述" :auto-size="{ minRows: 3, maxRows: 5 }" />
+        <a-textarea v-model="form.description_en" placeholder="英文产品描述" :auto-size="{ minRows: 3, maxRows: 5 }" :maxlength="255" />
       </a-form-model-item>
       <a-form-model-item label="所属系列" prop="classify">
         <a-select
@@ -67,17 +67,24 @@
       <a-form-model-item label="英文产品详情" v-else>
         <wangEditor :value="form.content_en" @change="editorChange1" id="editor2"></wangEditor>
       </a-form-model-item>
+      <a-form-model-item label="首页是否推荐" prop="home_recommend">
+        <a-select v-model="form.home_recommend" placeholder="新闻类型" style="width:50%;">
+          <a-select-option :value="1">是</a-select-option>
+          <a-select-option :value="2">否</a-select-option>
+        </a-select>
+      </a-form-model-item>
       <a-form-model-item label="排序">
-        <a-input-number style="width:100px" v-model="form.sort" />
+        <a-input-number style="width:100px" v-model="form.sort" :maxlength="10" />
       </a-form-model-item>
       <a-form-model-item label="seo关键字">
-        <a-input placeholder="最多32个汉字" v-model="form.seo_keyword" :maxLength="32"></a-input>
+        <a-input placeholder="最多32个汉字" v-model="form.seo_keyword" :maxlength="100"></a-input>
       </a-form-model-item>
       <a-form-model-item label="seo描述">
         <a-textarea
           v-model="form.seo_description"
           placeholder="seo描述"
           :auto-size="{ minRows: 3, maxRows: 5 }"
+          :maxlength="150"
         />
       </a-form-model-item>
     </a-form-model>
@@ -164,6 +171,7 @@ export default {
         seo_description: undefined,
         sort: undefined,
         images: [],
+        home_recommend:undefined
       },
       rules: {
         title: [{ required: true, message: '产品标题不能为空', trigger: 'blur' }],
@@ -190,6 +198,7 @@ export default {
   watch: {
     visible(val) {
       if(val && this.id) {
+        return;
         getProductImgs({productId: this.id}).then(res => {
           if(res.code == 200) {
             res.data.forEach(item => {
@@ -243,6 +252,10 @@ export default {
     },
     //删除图片
     hanldeImgRemove(file) {
+      const _index = this.form.images.findIndex(item => file.url.indexOf(item) != -1 )
+      this.form.images.splice(_index,1)
+      this.fileList.splice(_index,1)
+      return
       if(this.status == 1) {
         const _index = this.form.images.findIndex(item => file.url.indexOf(item) != -1 )
         this.form.images.splice(_index,1)
@@ -337,6 +350,7 @@ export default {
               seo_description:this.form.seo_description||'',
               image_url:this.form.images.join(','),
               sort:this.form.sort||0,
+              home_recommend:this.form.home_recommend||2,
             }
 
             addProduct(data).then(res => {
@@ -361,6 +375,7 @@ export default {
               seo_description:this.form.seo_description||'',
               image_url:this.form.images.join(','),
               sort:this.form.sort||0,
+              home_recommend:this.form.home_recommend||2,
             }
             updateProduct(data).then(res => {
               if(res.code==200){

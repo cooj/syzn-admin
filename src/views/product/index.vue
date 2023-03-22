@@ -49,6 +49,11 @@
           <a-tag color="green" v-if="r.classify_id">{{ r.classify_name }}</a-tag>
           <a-tag v-else>无</a-tag>
         </template>
+        <template slot="home_recommend" slot-scope="t,r">
+          <a-tag color="blue" v-if="r.home_recommend==1">是</a-tag>
+          <a-tag v-else>否</a-tag>
+        </template>
+        
         <template slot="action" slot-scope="r">
           <a @click="handleEditorClick(r)">修改</a>
           <a-divider type="vertical"></a-divider>
@@ -89,6 +94,7 @@ export default {
         { title: '产品图片', scopedSlots: { customRender: 'image_url' },align:'center',width: 120 },
         { title: '产品名称', dataIndex: 'title',key: 'title'},
         {title: '产品系列',scopedSlots: { customRender: 'classify_id' }, width: 160,},
+        {title: '首页显示',scopedSlots: { customRender: 'home_recommend' }, width: 120, align: 'center'},
         { title: '操作', scopedSlots: { customRender: 'action' }, width: 120, fixed: 'right', align: 'center' }
       ],
       data: [],

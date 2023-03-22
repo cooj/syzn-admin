@@ -21,10 +21,10 @@
       :key="visible"
     >
       <a-form-model-item label="新闻标题" prop="title" v-if="tabkey=='1'">
-        <a-input v-model="form.title" placeholder="新闻标题" />
+        <a-input v-model="form.title" placeholder="新闻标题" :maxLength="80" />
       </a-form-model-item>
       <a-form-model-item label="英文新闻标题" prop="title" v-else>
-        <a-input v-model="form.title_en" placeholder="英文新闻标题" />
+        <a-input v-model="form.title_en" placeholder="英文新闻标题" :maxLength="80" />
       </a-form-model-item>
       <a-form-model-item label="新闻封面图" required>
         <a-upload
@@ -47,6 +47,7 @@
           v-model="form.description"
           placeholder="新闻摘要"
           :auto-size="{ minRows: 2, maxRows: 6 }"
+          :maxLength="255"
         />
       </a-form-model-item>
       <a-form-model-item label="英文新闻摘要" prop="description_en" v-else>
@@ -54,6 +55,7 @@
           v-model="form.description_en"
           placeholder="英文新闻摘要"
           :auto-size="{ minRows: 2, maxRows: 6 }"
+          :maxLength="255"
         />
       </a-form-model-item>
       <a-form-model-item label="首页是否推荐" prop="home_recommend">
@@ -65,7 +67,7 @@
       <a-form-model-item label="新闻类型" prop="type">
         <a-select v-model="form.type" placeholder="新闻类型" style="width:50%;">
           <a-select-option :value="1">公司新闻</a-select-option>
-          <a-select-option :value="2">行内资讯</a-select-option>
+          <!-- <a-select-option :value="2">行内资讯</a-select-option> -->
           <a-select-option :value="3">使用案例</a-select-option>
         </a-select>
       </a-form-model-item>
@@ -76,7 +78,7 @@
         <wangEditor :value="form.content_en" @change="editorChange1" id="content2"></wangEditor>
       </a-form-model-item>
       <a-form-model-item label="排序">
-        <a-input-number style="width:100px" v-model="form.sort" />
+        <a-input-number style="width:100px" v-model="form.sort" :maxLength="10" />
       </a-form-model-item>
     </a-form-model>
     <div
@@ -162,13 +164,14 @@ export default {
     },
     // 删除图片
     hanldeImgRemove(file) {
-      deleteFile({filePath: file.url}).then(res => {
-        if(res.code == '0') {
-          this.showMessage(res,() => {
-            this.fileList = []
-          })
-        }
-      })
+      this.fileList = []
+      // deleteFile({filePath: file.url}).then(res => {
+      //   if(res.code == '0') {
+      //     this.showMessage(res,() => {
+      //       this.fileList = []
+      //     })
+      //   }
+      // })
     },
     //自定义上传图片
     handleUploadChange(file) {

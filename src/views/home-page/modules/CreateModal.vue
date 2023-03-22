@@ -186,13 +186,13 @@ export default {
           if(this.status == 1) {
             const data={
               title: this.form.title||'', //
-    title_en: this.form.title_en||'', //
-    url: this.form.url||'', // 链接地址
-    image_url:  this.form.image_url||'', // 视频封面图片
-    description:  this.form.description||'', // 描述
-    description_en:  this.form.description_en||'', //
-    screen: this.form.screen||'', // 第几屏
-    type: this.form.type||'', // 1：按钮链接，2：图片链接，3：首页产品中心推荐产品
+              title_en: this.form.title_en||'', //
+              url: this.form.url||'', // 链接地址
+              image_url:  this.form.image_url||'', // 视频封面图片
+              description:  this.form.description||'', // 描述
+              description_en:  this.form.description_en||'', //
+              screen: this.form.screen||'', // 第几屏
+              type: this.form.type||'', // 1：按钮链接，2：图片链接，3：首页产品中心推荐产品
             }
 // console.log('data :>> ', data);
 // return  false;
@@ -208,13 +208,13 @@ export default {
             const data={
               id:this.id,
               title: this.form.title||'', //
-    title_en: this.form.title_en||'', //
-    url: this.form.url||'', // 链接地址
-    image_url:  this.form.image_url||'', // 视频封面图片
-    description:  this.form.description||'', // 描述
-    description_en:  this.form.description_en||'', //
-    screen: this.form.screen||'', // 第几屏
-    type: this.form.type||'', // 1：按钮链接，2：图片链接，3：首页产品中心推荐产品
+              title_en: this.form.title_en||'', //
+              url: this.form.url||'', // 链接地址
+              image_url:  this.form.image_url||'', // 视频封面图片
+              description:  this.form.description||'', // 描述
+              description_en:  this.form.description_en||'', //
+              screen: this.form.screen||'', // 第几屏
+              type: this.form.type||'', // 1：按钮链接，2：图片链接，3：首页产品中心推荐产品
             }
             updateHOmePageList(data).then(res => {
               if(res.code == 200) {

@@ -17,13 +17,13 @@
       :key="visible"
     >
       <a-form-model-item label="登录账号" prop="account">
-        <a-input v-model.trim="form.account" placeholder="登录账号" />
+        <a-input v-model.trim="form.account" placeholder="登录账号" :maxlength="20"/>
       </a-form-model-item>
       <a-form-model-item label="密码" prop="password" v-if="status==1">
-        <a-input-password placeholder="密码" v-model.trim="form.password" />
+        <a-input-password placeholder="密码" v-model.trim="form.password" :maxlength="20"/>
       </a-form-model-item>
       <a-form-model-item label="密码" prop="new_password" v-lse>
-        <a-input-password placeholder="密码" v-model.trim="form.new_password" />
+        <a-input-password placeholder="密码" v-model.trim="form.new_password" :maxlength="20" />
       </a-form-model-item>
       <a-form-model-item label="状态" prop="status">
         <a-select v-model="form.status" placeholder="用户状态" style="width:200px;">
@@ -32,7 +32,7 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="用户昵称" prop="username">
-        <a-input v-model="form.username" placeholder="用户昵称" />
+        <a-input v-model="form.username" placeholder="用户昵称" :maxlength="20" />
       </a-form-model-item>
     </a-form-model>
     <div

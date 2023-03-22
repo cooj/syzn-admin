@@ -46,7 +46,7 @@
         <a-input v-model="form.href" :maxLength="100"/>
       </a-form-model-item>
       <a-form-model-item label="排序">
-        <a-input-number style="width:100px" v-model="form.sort" />
+        <a-input-number style="width:100px" v-model="form.sort" :maxlength="10"/>
       </a-form-model-item>
       <a-form-model-item label="是否隐藏">
         <a-radio-group v-model="form.is_show">
@@ -159,6 +159,9 @@ lookForAllId(data = [],id, arr = []) {
 
     // 删除图片
     hanldeImgRemove(file) {
+      this.fileList = []
+      this.form.img='';
+      return
       deleteFile({filePath: file.url}).then(res => {
         if(res.code == 200) {
           this.showMessage(res,() => {

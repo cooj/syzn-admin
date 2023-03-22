@@ -17,7 +17,7 @@
       :key="visible"
     >
       <a-form-model-item label="客户名称" prop="name">
-        <a-input v-model="form.name" placeholder="客户名称" />
+        <a-input v-model="form.name" placeholder="客户名称" :maxLength="30" />
       </a-form-model-item>
       <a-form-model-item label="图片" required>
         <a-upload
@@ -122,6 +122,9 @@ export default {
     },
     //删除图片
     hanldeImgRemove(file) {
+      this.fileList = []
+      this.form.url=''
+      return false;
      deleteFile({filePath: file.url}).then(res => {
         if(res.code == 200) {
           this.showMessage({code:200,message:'删除成功'},() => {

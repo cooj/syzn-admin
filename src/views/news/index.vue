@@ -13,7 +13,7 @@
               <a-form-item label="新闻类型">
                 <a-select v-model="queryParam.type" placeholder="新闻类型" allowClear>
                   <a-select-option value="1">公司新闻</a-select-option>
-                  <a-select-option value="2">行内资讯</a-select-option>
+                  <!-- <a-select-option value="2">行内资讯</a-select-option> -->
                   <a-select-option value="3">使用案例</a-select-option>
                 </a-select>
               </a-form-item>
