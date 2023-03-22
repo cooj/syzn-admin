@@ -82,7 +82,7 @@
             </a-col>
             <a-col :span="8">
               <a-form-model-item label="售后技术团队电话">
-                <a-input v-model="form.service_after_sales_technical_team_tel" style="width:100%" placeholder="售前技术团队电话"  :maxlength="30"/>
+                <a-input v-model="form.service_after_sales_technical_team_tel" style="width:100%" placeholder="售前技术团队电话" :maxlength="30"/>
               </a-form-model-item>
             </a-col>
           </a-row>

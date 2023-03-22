@@ -17,7 +17,7 @@
             <a-input placeholder="公司地址" v-model="form.address" :maxlength="200" />
           </a-form-item>
           <a-form-item label="英文公司地址" v-else>
-            <a-input placeholder="英文公司地址" v-model="form.address_en"  :maxlength="200" />
+            <a-input placeholder="英文公司地址" v-model="form.address_en" :maxlength="200" />
           </a-form-item>
           <a-form-item label="公司成立时间">
             <a-date-picker v-model="form.establish_date" valueFormat="YYYY-MM-DD" style="width:50%" />
@@ -26,7 +26,7 @@
             <a-input-number placeholder="客服QQ" v-model="form.qq" style="width:50%;" :maxlength="20" />
           </a-form-item>
           <a-form-item label="服务热线">
-            <a-input placeholder="服务热线" v-model="form.tel" style="width: 100%"  :maxlength="30" />
+            <a-input placeholder="服务热线" v-model="form.tel" style="width: 100%" :maxlength="30" />
           </a-form-item>
           <a-form-item label="网站seo关键字">
             <a-input placeholder="seo关键字" v-model="form.seo_keyword" :maxlength="150" />
