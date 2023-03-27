@@ -205,6 +205,9 @@ export default {
     },
     // 删除公司2
     hanldeImgRemove2() {
+      this.fileList2 = []
+            this.form.logo_mobile = ''
+      return 
       deleteFile({filePath: file.url}).then(res => {
         if(res.code == '0') {
           this.showMessage(res,() => {
@@ -216,6 +219,9 @@ export default {
     },
     //删除图片
     hanldeImgRemove(file) {
+      this.form.logo = ''
+            this.fileList = []
+      return
       deleteFile({filePath: file.url}).then(res => {
         if(res.code == '0') {
           this.showMessage(res,() => {

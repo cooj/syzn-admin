@@ -93,7 +93,7 @@
             <a-upload
               list-type="picture-card"
               :file-list="fileList2"
-              :remove="hanldeImgRemove"
+              :remove="hanldeImgRemove2"
               @preview="handlePreview"
               :customRequest="handleUploadChange2"
               class="upload-half"
@@ -178,10 +178,24 @@ export default {
     },
     //删除图片
     hanldeImgRemove(file) {
+      this.fileList = []
+      return
       deleteFile({filePath: file.url}).then(res => {
         if(res.code == '0') {
           this.showMessage(res,() => {
             this.fileList = []
+          })
+        }
+      })
+    },
+        //删除图片
+        hanldeImgRemove2(file) {
+      this.fileList2 = []
+      return
+      deleteFile({filePath: file.url}).then(res => {
+        if(res.code == '0') {
+          this.showMessage(res,() => {
+            this.fileList2 = []
           })
         }
       })
